@@ -73,11 +73,11 @@ RUN	cd /tmp/wkhtmltopdf/qt && \
 	NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) && \
 	export MAKEFLAGS=-j${NPROC} && \
 	export MAKE_COMMAND="make -j${NPROC}" && \
-	make && \
+	make --silent && \
 	make install && \
 	cd /tmp/wkhtmltopdf && \
 	qmake && \
-	make && \
+	make --silent && \
 	make install && \
 	rm -rf /tmp/*
 

@@ -1,29 +1,34 @@
-FROM alpine:edge
-MAINTAINER Trevor Ferre <trevor@alloylab.com>
+FROM alpine:3.6
+MAINTAINER Anton Wahyu <mail@anton.web.id>
 
 # install qt build packages #
-RUN echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
-RUN apk add --update \
-	git patch gtk+ openssl glib fonts-base fonts-extra \
-	make g++ glib-dev gtk+-dev mesa-dev openssl-dev
-RUN rm -rf /var/cache/apk/*
-	
-# wkhtmltopdf #
-RUN git clone --recursive https://github.com/wkhtmltopdf/wkhtmltopdf.git /tmp/wkhtmltopdf
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
+	&& apk update \
+	&& apk add gtk+ openssl glib fontconfig bash vim \
+	&& apk add --virtual .deps git patch make g++ \
+		libc-dev gettext-dev zlib-dev bzip2-dev libffi-dev pcre-dev \
+		glib-dev atk-dev expat-dev libpng-dev freetype-dev fontconfig-dev \
+		libxau-dev libxdmcp-dev libxcb-dev xf86bigfontproto-dev libx11-dev \
+		libxrender-dev pixman-dev libxext-dev cairo-dev perl-dev \
+		libxfixes-dev libxdamage-dev graphite2-dev icu-dev harfbuzz-dev \
+		libxft-dev pango-dev gtk+-dev libdrm-dev \
+		libxxf86vm-dev libxshmfence-dev wayland-dev mesa-dev openssl-dev \
+	&& git clone --recursive https://github.com/wkhtmltopdf/wkhtmltopdf.git /tmp/wkhtmltopdf \
+	&& cd /tmp/wkhtmltopdf \
+	&& git checkout ccf91a0
 
-COPY conf/qt-musl.patch /tmp/wkhtmltopdf/qt/qt-musl.patch
-COPY conf/qt-musl-iconv-no-bom.patch /tmp/wkhtmltopdf/qt/qt-musl-iconv-no-bom.patch
-COPY conf/qt-recursive-global-mutex.patch /tmp/wkhtmltopdf/qt/qt-recursive-global-mutex.patch
-COPY conf/qt-font-pixel-size.patch /tmp/wkhtmltopdf/qt/qt-font-pixel-size.patch
+COPY conf/* /tmp/wkhtmltopdf/qt/
 
 RUN	cd /tmp/wkhtmltopdf/qt && \
 	patch -p1 -i qt-musl.patch && \
 	patch -p1 -i qt-musl-iconv-no-bom.patch && \
 	patch -p1 -i qt-recursive-global-mutex.patch && \
 	patch -p1 -i qt-font-pixel-size.patch && \
+	patch -p1 -i qt-gcc6.patch && \
 	sed -i "s|-O2|$CXXFLAGS|" mkspecs/common/g++.conf && \
 	sed -i "/^QMAKE_RPATH/s| -Wl,-rpath,||g" mkspecs/common/g++.conf && \
 	sed -i "/^QMAKE_LFLAGS\s/s|+=|+= $LDFLAGS|g" mkspecs/common/g++.conf && \
+	CFLAGS=-w CPPFLAGS=-w CXXFLAGS=-w LDFLAGS=-w \
 	./configure -confirm-license -opensource \
 		-prefix /usr \
 		-datadir /usr/share/qt \
@@ -42,6 +47,7 @@ RUN	cd /tmp/wkhtmltopdf/qt && \
 		-qt-libtiff \
 		-qt-libjpeg \
 		-svg \
+		-script \
 		-webkit \
 		-gtkstyle \
 		-xmlpatterns \
@@ -64,15 +70,17 @@ RUN	cd /tmp/wkhtmltopdf/qt && \
 		-no-dbus \
 		-no-opengl \
 		-no-openvg && \
-	make --silent && \
+	NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) && \
+	export MAKEFLAGS=-j${NPROC} && \
+	export MAKE_COMMAND="make -j${NPROC}" && \
+	make && \
 	make install && \
 	cd /tmp/wkhtmltopdf && \
 	qmake && \
-	make --silent && \
+	make && \
 	make install && \
 	rm -rf /tmp/*
 
 # remove qt build packages #
-RUN apk del --update \
-	make g++ glib-dev gtk+-dev mesa-dev openssl-dev
-RUN rm -rf /var/cache/apk/*
+RUN apk del .deps \
+	&& rm -rf /var/cache/apk/*

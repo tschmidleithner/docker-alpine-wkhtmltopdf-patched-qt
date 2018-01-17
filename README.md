@@ -1,20 +1,16 @@
-# Varnish Docker Container
+#### Alpine Linux 3.6 wkhtmltopdf 0.12.5-dev (with patched qt)
 
-[![](https://badge.imagelayers.io/alloylab/wkhtmltopdf:latest.svg)](https://imagelayers.io/?images=alloylab/wkhtmltopdf:latest)
+Based on [alloylab/Docker-Alpine-wkhtmltopdf](https://github.com/alloylab/Docker-Alpine-wkhtmltopdf)
 
-> Alpine Lastest  
-> wkhtmltopdf
+Alpine has wkhtmltopdf package but with unpatched qt, therefor not all wkhtmltopdf features can be used. 
 
-## Usage
+This container aim to build wkhtmltopdf and patched qt.
 
-wkhtmltopdf with qt patches
+Resulting binary from build process can be reused as long as glib and openssl packages is installed.
 
-yes, Alpine does have a wkhtmltopdf package... but it doesn't include the qt patches ... enjoy!
+Build step:
 
 ```
-docker run --detach \
---name wkhtmltopdf \
---restart always \
--i -t \
-alloylab/wkhtmltopdf;
+docker build -t aantonw/wkhtmltohtml .
+docker run --name wkhtmltopdf -it aantonw/wkhtmltopdf html
 ```

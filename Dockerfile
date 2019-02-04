@@ -15,9 +15,9 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 		libxxf86vm-dev libxshmfence-dev wayland-dev mesa-dev openssl-dev \
 	&& git clone --recursive https://github.com/wkhtmltopdf/wkhtmltopdf.git /tmp/wkhtmltopdf \
 	&& cd /tmp/wkhtmltopdf \
-	&& git checkout ccf91a0 \
+	&& git checkout a8ba57e \
 	&& cd /tmp/wkhtmltopdf/qt \
-	&& git checkout wk_4.8.7 && git reset --hard ce61dc7
+	&& git checkout wk_4.8.7 && git reset --hard 5db36ec
 
 COPY conf/* /tmp/wkhtmltopdf/qt/
 

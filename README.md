@@ -1,4 +1,4 @@
-#### Alpine Linux 3.6 wkhtmltopdf 0.12.5-dev (with patched qt)
+#### Alpine Linux 3.8 wkhtmltopdf 0.12.5-dev (with patched qt)
 
 Based on [alloylab/Docker-Alpine-wkhtmltopdf](https://github.com/alloylab/Docker-Alpine-wkhtmltopdf)
 

@@ -85,18 +85,6 @@ index 9cd3d123c1..917eac055a 100644
  };
  
  
-diff --git a/src/3rdparty/webkit/Source/JavaScriptCore/JavaScriptCore.pro b/src/3rdparty/webkit/Source/JavaScriptCore/JavaScriptCore.pro
-index f20ffc3..e63d672 100644
---- a/src/3rdparty/webkit/Source/JavaScriptCore/JavaScriptCore.pro
-+++ b/src/3rdparty/webkit/Source/JavaScriptCore/JavaScriptCore.pro
-@@ -241,3 +241,7 @@ lessThan(QT_GCC_MAJOR_VERSION, 5) {
-         }
-     }
- }
-+
-+*-g++* {
-+    QMAKE_CXXFLAGS += -std=gnu++98
-+}
 diff --git a/src/corelib/global/qglobal.h b/src/corelib/global/qglobal.h
 index 7b69922b89..d88d4e5ead 100644
 --- a/src/corelib/global/qglobal.h

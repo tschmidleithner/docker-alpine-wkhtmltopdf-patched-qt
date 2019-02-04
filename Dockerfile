@@ -17,7 +17,7 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 	&& cd /tmp/wkhtmltopdf \
 	&& git checkout ccf91a0 \
 	&& cd /tmp/wkhtmltopdf/qt \
-	&& git checkout wk_4.8.7 && git reset --hard 5a2c79e
+	&& git checkout wk_4.8.7 && git reset --hard ce61dc7
 
 COPY conf/* /tmp/wkhtmltopdf/qt/
 

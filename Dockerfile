@@ -1,5 +1,5 @@
 FROM alpine:3.6
-MAINTAINER Anton Wahyu <mail@anton.web.id>
+MAINTAINER Matthias Langbein <matthias@movio.co>
 
 # install qt build packages #
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
@@ -15,7 +15,9 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 		libxxf86vm-dev libxshmfence-dev wayland-dev mesa-dev openssl-dev \
 	&& git clone --recursive https://github.com/wkhtmltopdf/wkhtmltopdf.git /tmp/wkhtmltopdf \
 	&& cd /tmp/wkhtmltopdf \
-	&& git checkout ccf91a0
+	&& git checkout ccf91a0 \
+	&& cd /tmp/wkhtmltopdf/qt \
+	&& git checkout wk_4.8.7 && git reset --hard c745cfd
 
 COPY conf/* /tmp/wkhtmltopdf/qt/
 

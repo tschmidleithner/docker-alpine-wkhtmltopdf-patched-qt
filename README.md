@@ -31,5 +31,6 @@ COPY wkhtmltopdf /usr/bin/wkhtmltopdf
 # add openssl dependencies
 RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.8/main' >> /etc/apk/repositories && \
     apk add --no-cache libcrypto1.0 libssl1.0 && \
+    chmod +x /usr/bin/wkhtmltopdf && \
     /usr/bin/wkhtmltopdf --version
 ```
